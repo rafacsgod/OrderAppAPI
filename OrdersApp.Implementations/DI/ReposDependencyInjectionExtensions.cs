@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using OrdersApp.Interfaces;
-using OrdersApp.Implementations;
+using OrdersApp.Implementations.Repositories;
+using OrdersApp.Interfaces.Repositories;
 
-namespace OrdersApp.DI
+namespace OrdersApp.Implementations.DI
 {
     /// <summary>
     /// Внедрение репозиториев в сервисы
@@ -16,3 +16,6 @@ namespace OrdersApp.DI
         }
     }
 }
+
+
+

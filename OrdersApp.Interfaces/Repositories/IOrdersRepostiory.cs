@@ -1,6 +1,6 @@
 ﻿using Entities;
 
-namespace OrdersApp.Interfaces
+namespace OrdersApp.Interfaces.Repositories
 {
     public interface IOrdersRepostiory
     {
@@ -17,14 +17,19 @@ namespace OrdersApp.Interfaces
         public Task DeleteOrderById(Guid id);
 
         /// <summary>
-        /// ВОзвращает объект заказа по его Id
+        /// Возвращает объект заказа по его Id вместе со строками заказа
         /// </summary>
-        public Task<Order> GetOrderById(Guid id);
+        public Task<Order?> GetOrderWithLinesById(Guid id);
+
+        /// <summary>
+        /// Возвращает объект заказа по его Id не включая строк заказа
+        /// </summary>
+        public Task<Order?> GetOrderById(Guid id);
 
         /// <summary>
         /// Обновляет существующий заказ
         /// </summary>
         /// <returns>Возвращает объект измененного заказа</returns>
-        public Task<Order> UpdateOrder(Guid id, string newStatus, List<OrderLine> OrderLines);
+        public Task<Order> UpdateOrder(Order order);
     }
 }

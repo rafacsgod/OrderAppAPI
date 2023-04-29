@@ -1,8 +1,14 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using OrdersApp.Operations.Orders;
 using Utility.DTOs;
 using Utility.RequestOptions;
+
+using OrdersApp.Operations.Orders.CreateNewOrderQuery;
+using OrdersApp.Operations.Orders.DeleteOrderByIdQuery;
+using OrdersApp.Operations.Orders.GetOrderByIdQuery;
+using OrdersApp.Operations.Orders.UpdateOrderQuery;
+
+using Utility.Exceptions;
 
 namespace OrdersApp.Controllers
 {
@@ -41,6 +47,16 @@ namespace OrdersApp.Controllers
                 OrderDto resultDto = await _mediator.Send(new CreateNewOrderQuery { OrderOptions = orderCreateOptions});
                 return Ok(resultDto);
             }
+            catch (NotUniqueGuidException ex)
+            {
+                _logger.LogError(ex.Message);
+                return Conflict(ex.Message);
+            }
+            catch (CommonValidationException ex)
+            {
+                _logger.LogError(ex.Message);
+                return StatusCode(StatusCodes.Status422UnprocessableEntity, ex.Message);
+            }
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
@@ -60,6 +76,16 @@ namespace OrdersApp.Controllers
                 await _mediator.Send(new DeleteOrderByIdQuery { OrderIdToDelete = id});
                 return Ok();
             }
+            catch (NonExistingOrderException ex)
+            {
+                _logger.LogError(ex.Message);
+                return NotFound(ex.Message);
+            }
+            catch (DeletingOrderNotAllowedByStatusException ex)
+            {
+                _logger.LogError(ex.Message);
+                return StatusCode(StatusCodes.Status403Forbidden, ex.Message);
+            }
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
@@ -78,6 +104,11 @@ namespace OrdersApp.Controllers
             {
                 OrderDto resultDto = await _mediator.Send(new GetOrderByIdQuery { OrderId = id});
                 return Ok(resultDto);
+            }
+            catch (NonExistingOrderException ex)
+            {
+                _logger.LogError(ex.Message);
+                return NotFound(ex.Message);
             }
             catch (Exception ex)
             {
@@ -101,6 +132,16 @@ namespace OrdersApp.Controllers
                     );
 
                 return Ok(resultDto);
+            }
+            catch (NonExistingOrderException ex)
+            {
+                _logger.LogError(ex.Message);
+                return NotFound(ex.Message);
+            }
+            catch (CommonValidationException ex)
+            {
+                _logger.LogError(ex.Message);
+                return StatusCode(StatusCodes.Status422UnprocessableEntity, ex.Message);
             }
             catch (Exception ex)
             {
