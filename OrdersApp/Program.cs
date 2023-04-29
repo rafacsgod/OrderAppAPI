@@ -1,4 +1,4 @@
-using OrdersApp.DI;
+using OrdersApp.Implementations.DI;
 using Databases.Extensions;
 using System.Reflection;
 
@@ -8,8 +8,10 @@ builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
 builder.Services.AddOrdersAppDb();
 builder.Services.AddOrdersAppRepositories();
+builder.Services.AddOrdersAppValidation();
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 
